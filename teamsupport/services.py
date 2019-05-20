@@ -15,7 +15,7 @@ class TeamSupportService(HTTPServiceClient):
                 ' To run integration tests edit config.py manually')
 
         super(TeamSupportService, self).__init__(
-            url='https://app.teamsupport.com/api/json/',
+            url=config.URL if hasattr(config, 'URL') else 'https://app.teamsupport.com/api/json/',
             auth=(config.ORG_ID, config.AUTH_KEY), **kwargs)
 
     def search_tickets(self, **query_params):
