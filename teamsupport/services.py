@@ -19,7 +19,22 @@ class TeamSupportService(HTTPServiceClient):
             auth=(config.ORG_ID, config.AUTH_KEY), **kwargs)
 
     def search_tickets(self, **query_params):
-        return self.get('tickets/', params=query_params).json()['Tickets']
+        return list(self.search_tickets_iter(**query_params))
+
+    def search_tickets_iter(self, **query_params):
+        page = 1
+        query_params['pageSize'] = 50
+        while True:
+            query_params['pageNumber'] = page
+            res = self.get('tickets/', params=query_params).json()
+            tickets = res['Tickets']
+            if not type(tickets) == list: # an array is not returned by TeamSupport if one only ticket in response
+                yield tickets
+                raise StopIteration
+            for ticket in tickets:
+                yield ticket
+            if res.get('NextPage') is None: raise StopIteration
+            page += 1
 
     def search_contacts(self, **query_params):
         return self.get('contacts/', params=query_params).json()['Contacts']
