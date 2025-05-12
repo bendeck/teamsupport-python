@@ -30,10 +30,11 @@ class TeamSupportService(HTTPServiceClient):
             tickets = res['Tickets']
             if not type(tickets) == list: # an array is not returned by TeamSupport if one only ticket in response
                 yield tickets
-                raise StopIteration
+                return
             for ticket in tickets:
                 yield ticket
-            if res.get('NextPage') is None: raise StopIteration
+            if res.get('NextPage') is None:
+                return
             page += 1
 
     def search_contacts(self, **query_params):
