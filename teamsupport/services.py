@@ -81,6 +81,23 @@ class TeamSupportService(HTTPServiceClient):
             'tickets/{0}/Actions/{1}'.format(
                 ticket_id, action_id)).json()['Action']
 
+    def get_ticket_action_attachments(self, ticket_id, action_id, **query_params):
+        return self.get(
+            'tickets/{0}/Actions/{1}'.format(ticket_id, action_id),
+            params=query_params).json()['Attachments']
+
+    def get_ticket_action_attachment_file(self, ticket_id, action_id, attachment_id, **query_params):
+        return self.get(
+            'tickets/{0}/Actions/{1}/Attachments/{2}'.format(ticket_id, action_id, attachment_id),
+            params=query_params)
+
+    def set_ticket_jira_key(self, ticket_id, jira_key):
+        # https://support.teamsupport.com/knowledgeBase/20136103
+        return self.put(
+            'tickets/{0}'.format(ticket_id),
+            json={'Ticket': [{'JiraKey': jira_key}]},
+        ).json()['Ticket']
+
     def get_ticket_statuses(self):
         return self.get(
             'properties/ticketstatuses/').json()['TicketStatuses']
