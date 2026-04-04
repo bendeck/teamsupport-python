@@ -83,7 +83,7 @@ class TeamSupportService(HTTPServiceClient):
 
     def get_ticket_action_attachments(self, ticket_id, action_id, **query_params):
         return self.get(
-            'tickets/{0}/Actions/{1}'.format(ticket_id, action_id),
+            'tickets/{0}/Actions/{1}/Attachments'.format(ticket_id, action_id),
             params=query_params).json()['Attachments']
 
     def get_ticket_action_attachment_file(self, ticket_id, action_id, attachment_id, **query_params):
